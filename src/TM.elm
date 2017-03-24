@@ -1,6 +1,7 @@
 module TM exposing (..)
 
 import Html exposing (text)
+import List exposing (head, tail)
 
 main: Html.Html msg
 main =
@@ -47,3 +48,20 @@ type alias Transition states symbols =
 type Move =
       Left
     | Right
+
+
+lookup: Transitions states symbols -> (states, symbols) -> Maybe (states, symbols, Move)
+lookup transitions current =
+    case head transitions of
+        Just transition ->
+            if transition.current == current then
+                Just transition.next
+            else
+                case tail transitions of
+                    Just ts -> lookup ts current
+
+                    Nothing -> Nothing
+
+        Nothing -> Nothing
+
+
