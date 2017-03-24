@@ -14,6 +14,7 @@ main =
 type alias Model =
     {
       tm: TuringMachine Int String
+    , blank: String
     , running: Bool
     }
 
