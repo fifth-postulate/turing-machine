@@ -1,12 +1,46 @@
 module TM exposing (..)
 
-import Html exposing (text)
+import Html exposing (program, div, span, text)
+import Html.Attributes exposing (class)
 import List exposing (head, tail)
 
-main: Html.Html msg
+main: Program Never Model Message
 main =
-    text "Hello, World!"
+    program
+    {
+      init = init
+    , view = view
+    , update = update
+    , subscriptions = subscriptions
+    }
 
+
+init: (Model, Cmd Message)
+init =
+    (
+     {
+       tm =
+           {
+             tape =
+                 {
+                   left = []
+                 , current = "I"
+                 , right = ["I", "I", "I"]
+                 }
+           , state = 0
+           , transitions =
+               [
+                 { current = (0, "I"), next = (0, "I", Right) }
+               , { current = (0, "_"), next = (1, "I", Left) }
+               , { current = (1, "I"), next = (1, "I", Left) }
+               , { current = (1, "_"), next = (2, "_", Right) }
+               ]
+           }
+     , blank = "_"
+     , running = False
+     }
+    , Cmd.none
+    )
 
 -- Model
 
@@ -141,3 +175,44 @@ lookup transitions current =
         Nothing -> Nothing
 
 
+-- Update
+
+
+type Message =
+    DoNothing
+
+
+update: Message -> Model -> (Model, Cmd Message)
+update message model =
+    (model, Cmd.none)
+
+
+-- View
+
+
+view: Model -> Html.Html Message
+view model =
+    div [class "turing-machine"]
+        [
+          div [class "tape"]
+              [
+                div [class "left"] []
+              , div [class "current"]
+                  [
+                    span [class "cell"] [ text model.tm.tape.current ]
+                  ]
+              , div [class "right"] []
+              ]
+        , div [class "state"]
+            [
+              span [] [ text (toString model.tm.state)]
+            ]
+        ]
+
+
+-- Subscriptions
+
+
+subscriptions: Model -> Sub Message
+subscriptions model =
+    Sub.none
