@@ -1,6 +1,6 @@
 module TM exposing (..)
 
-import Html exposing (program, div, span, text)
+import Html exposing (program, div, span, button, text)
 import Html.Attributes exposing (class)
 import List exposing (head, tail, map)
 
@@ -201,7 +201,11 @@ view model =
     in
         div [class "turing-machine"]
             [
-             div [class "tape"]
+              div [class "control"]
+                  [
+                    button [] [ text ">"]
+                  ]
+            , div [class "tape"]
                  [
                    div [class "left"] left_tape
                  , div [class "current"]
