@@ -2,6 +2,7 @@ module TM exposing (..)
 
 import Html exposing (program, div, span, button, text)
 import Html.Attributes exposing (class)
+import Html.Events exposing (onClick)
 import List exposing (head, tail, map)
 
 main: Program Never Model Message
@@ -179,12 +180,16 @@ lookup transitions current =
 
 
 type Message =
-    DoNothing
+      DoNothing
+    | Step
 
 
 update: Message -> Model -> (Model, Cmd Message)
 update message model =
-    (model, Cmd.none)
+    case message of
+        Step -> ({model | tm = step model.tm model.blank}, Cmd.none)
+
+        DoNothing -> (model, Cmd.none)
 
 
 -- View
@@ -203,7 +208,7 @@ view model =
             [
               div [class "control"]
                   [
-                    button [] [ text ">"]
+                    button [onClick Step] [ text ">"]
                   ]
             , div [class "tape"]
                  [
