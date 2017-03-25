@@ -2,7 +2,7 @@ module TM exposing (..)
 
 import Html exposing (program, div, span, text)
 import Html.Attributes exposing (class)
-import List exposing (head, tail)
+import List exposing (head, tail, map)
 
 main: Program Never Model Message
 main =
@@ -192,22 +192,29 @@ update message model =
 
 view: Model -> Html.Html Message
 view model =
-    div [class "turing-machine"]
-        [
-          div [class "tape"]
-              [
-                div [class "left"] []
-              , div [class "current"]
-                  [
-                    span [class "cell"] [ text model.tm.tape.current ]
-                  ]
-              , div [class "right"] []
-              ]
-        , div [class "state"]
+    let
+        make_cell = \s -> span [class "cell"] [text s]
+
+        left_tape = map make_cell model.tm.tape.left
+
+        right_tape = map make_cell model.tm.tape.right
+    in
+        div [class "turing-machine"]
             [
-              span [] [ text (toString model.tm.state)]
+             div [class "tape"]
+                 [
+                   div [class "left"] left_tape
+                 , div [class "current"]
+                     [
+                      make_cell model.tm.tape.current
+                     ]
+                 , div [class "right"] right_tape
+                 ]
+            , div [class "state"]
+                [
+                 span [] [ text (toString model.tm.state)]
+                ]
             ]
-        ]
 
 
 -- Subscriptions
