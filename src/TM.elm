@@ -38,10 +38,33 @@ init =
                ]
            }
      , blank = "_"
+     , visible_tape = 5
      , running = False
      }
     , Cmd.none
     )
+
+
+-- Helpers
+
+
+take_with_default: Int -> a -> List a -> List a
+take_with_default n default list =
+    if n == 0 then
+        []
+    else
+        case head list of
+            Just v ->
+                case tail list of
+                    Just vs ->
+                        v :: take_with_default (n-1) default vs
+
+                    Nothing ->
+                        v :: take_with_default (n-1) default []
+
+            Nothing ->
+                default :: take_with_default (n-1) default []
+
 
 -- Model
 
@@ -50,6 +73,7 @@ type alias Model =
     {
       tm: TuringMachine Int String
     , blank: String
+    , visible_tape: Int
     , running: Bool
     }
 
@@ -200,9 +224,11 @@ view model =
     let
         make_cell = \s -> span [class "cell"] [text s]
 
-        left_tape = map make_cell model.tm.tape.left
+        left_tape =
+             map make_cell (take_with_default model.visible_tape model.blank model.tm.tape.left)
 
-        right_tape = map make_cell model.tm.tape.right
+        right_tape =
+            map make_cell (take_with_default model.visible_tape model.blank model.tm.tape.right)
     in
         div [class "turing-machine"]
             [
