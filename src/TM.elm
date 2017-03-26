@@ -10,6 +10,8 @@ import TM.TuringMachine exposing (TuringMachine, step)
 import TM.Tape exposing (Tape, shift)
 import TM.Transitions exposing (Transitions, Transition, lookup)
 import TM.Move exposing (Move(..))
+import Helper exposing (take_with_default)
+
 
 main: Program Never Model Message
 main =
@@ -49,27 +51,6 @@ init =
      }
     , Cmd.none
     )
-
-
--- Helpers
-
-
-take_with_default: Int -> a -> List a -> List a
-take_with_default n default list =
-    if n == 0 then
-        []
-    else
-        case head list of
-            Just v ->
-                case tail list of
-                    Just vs ->
-                        v :: take_with_default (n-1) default vs
-
-                    Nothing ->
-                        v :: take_with_default (n-1) default []
-
-            Nothing ->
-                default :: take_with_default (n-1) default []
 
 
 -- Model
