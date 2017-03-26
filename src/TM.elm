@@ -4,13 +4,9 @@ import Html exposing (program, div, span, button, text)
 import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
 import Time exposing (every, millisecond)
-import List exposing (head, tail, map)
 
 import TM.TuringMachine exposing (TuringMachine, step)
-import TM.Tape exposing (Tape, shift)
-import TM.Transitions exposing (Transitions, Transition, lookup)
 import TM.Move exposing (Move(..))
-import Helper exposing (take_with_default)
 
 
 main: Program Never Model Message
@@ -104,35 +100,15 @@ view model =
                 "||"
             else
                 ">>"
-
-        make_cell = \s -> span [class "cell"] [text s]
-
-        left_tape =
-             map make_cell (take_with_default model.visible_tape model.blank model.tm.tape.left)
-
-        right_tape =
-            map make_cell (take_with_default model.visible_tape model.blank model.tm.tape.right)
     in
-        div [class "turing-machine"]
+        div [class "container"]
             [
-              div [class "control"]
-                  [
-                    button [onClick Step] [ text ">"]
-                  , button [onClick ToggleRunning] [ text running_text ]
-                  ]
-            , div [class "tape"]
+             div [class "control"]
                  [
-                   div [class "left"] left_tape
-                 , div [class "current"]
-                     [
-                      make_cell model.tm.tape.current
-                     ]
-                 , div [class "right"] right_tape
+                  button [onClick Step] [ text ">"]
+                 , button [onClick ToggleRunning] [ text running_text ]
                  ]
-            , div [class "state"]
-                [
-                 span [] [ text (toString model.tm.state)]
-                ]
+            , TM.TuringMachine.view model.tm model.visible_tape model.blank
             ]
 
 

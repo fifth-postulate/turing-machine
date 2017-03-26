@@ -1,5 +1,12 @@
-module TuringMachine (TuringMachine, step)
+module TM.TuringMachine exposing (TuringMachine, step, view)
 
+import Html exposing (program, div, span, button, text)
+import Html.Attributes exposing (class)
+import List exposing (map)
+import Helper exposing (take_with_default)
+
+import TM.Tape exposing (Tape, shift)
+import TM.Transitions exposing (Transitions, lookup)
 
 type alias TuringMachine states symbols =
     {
@@ -31,3 +38,32 @@ step tm blank =
 
             Nothing ->
                 tm
+
+view: TuringMachine states String -> Int -> String -> Html.Html msg
+view tm visible_tape blank =
+      let
+        make_cell = \s -> span [class "cell"] [text s]
+
+        left_tape =
+             map make_cell (take_with_default visible_tape blank tm.tape.left)
+
+        right_tape =
+            map make_cell (take_with_default visible_tape blank tm.tape.right)
+    in
+        div [class "turing-machine"]
+            [
+              div [class "tape"]
+                 [
+                   div [class "left"] left_tape
+                 , div [class "current"]
+                     [
+                      make_cell tm.tape.current
+                     ]
+                 , div [class "right"] right_tape
+                 ]
+            , div [class "state"]
+                [
+                 span [] [ text (toString tm.state)]
+                ]
+            ]
+
