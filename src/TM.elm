@@ -6,6 +6,9 @@ import Html.Events exposing (onClick)
 import Time exposing (every, millisecond)
 import List exposing (head, tail, map)
 
+import TM.Transitions exposing (Transitions, Transition, lookup)
+import TM.Move exposing (Move(..))
+
 main: Program Never Model Message
 main =
     program
@@ -95,22 +98,6 @@ type alias Tape symbols =
     }
 
 
-type alias Transitions states symbols =
-    List (Transition states symbols)
-
-
-type alias Transition states symbols =
-    {
-      current: (states, symbols)
-    , next: (states, symbols, Move)
-    }
-
-
-type Move =
-      Left
-    | Right
-
-
 step: TuringMachine states symbols -> symbols -> TuringMachine states symbols
 step tm blank =
     let
@@ -184,21 +171,6 @@ shift tape blank move =
             , current = current
             , right = right
             }
-
-
-lookup: Transitions states symbols -> (states, symbols) -> Maybe (states, symbols, Move)
-lookup transitions current =
-    case head transitions of
-        Just transition ->
-            if transition.current == current then
-                Just transition.next
-            else
-                case tail transitions of
-                    Just ts -> lookup ts current
-
-                    Nothing -> Nothing
-
-        Nothing -> Nothing
 
 
 -- Update
