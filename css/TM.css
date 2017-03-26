@@ -11,6 +11,26 @@
     width: calc(11*var(--cell-size));
 }
 
+.turing-machine > div {
+    margin-bottom: 5px;
+}
+
+.turing-machine > div:last-child {
+    margin-bottom: 0px;
+}
+
+.turing-machine .control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.turing-machine .control button {
+    background: white;
+    padding: 5px 8px;
+    border-radius: 5px;
+}
+
 .turing-machine .tape {
     background: var(--tape-background);
     display: flex;
