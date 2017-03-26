@@ -3,6 +3,7 @@
     --tape-border-width: 1px;
     --tape-background: #fffacd;
     --cell-size: 76px;
+    --state-size: 50px;
     --display-corner-radius: 5px;
     background-color:gray;
     padding: var(--display-corner-radius);
@@ -38,6 +39,7 @@
     border-style: dashed;
     border-width: 0px var(--tape-border-width);
     border-color: black;
+    font-family: Consolas, monaco, monospace;
 }
 
 .turing-machine .tape .left .cell  {
@@ -60,4 +62,16 @@
     border-style: solid;
     border-color: black;
     border-width: var(--tape-border-width);
+}
+
+.turing-machine .state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: var(--state-size);
+    height: var(--state-size);
+    background: white;
+    border-radius: calc(var(--state-size)/2);
 }
