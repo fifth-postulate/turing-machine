@@ -3,6 +3,7 @@ module TM exposing (..)
 import Html exposing (program, div, span, button, text)
 import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
+import Time exposing (every, millisecond)
 import List exposing (head, tail, map)
 
 main: Program Never Model Message
@@ -206,14 +207,27 @@ lookup transitions current =
 type Message =
       DoNothing
     | Step
+    | ToggleRunning
+    | Tick Time.Time
 
 
 update: Message -> Model -> (Model, Cmd Message)
 update message model =
-    case message of
-        Step -> ({model | tm = step model.tm model.blank}, Cmd.none)
+    let
+        next_tm = step model.tm model.blank
+    in
+        case message of
+            Step -> ({model | tm = next_tm}, Cmd.none)
 
-        DoNothing -> (model, Cmd.none)
+            ToggleRunning -> ({model | running = not model.running}, Cmd.none)
+
+            Tick _ ->
+                if model.running then
+                    ({model | tm = next_tm}, Cmd.none)
+                else
+                    (model, Cmd.none)
+
+            DoNothing -> (model, Cmd.none)
 
 
 -- View
@@ -222,6 +236,12 @@ update message model =
 view: Model -> Html.Html Message
 view model =
     let
+        running_text =
+            if model.running then
+                "||"
+            else
+                ">>"
+
         make_cell = \s -> span [class "cell"] [text s]
 
         left_tape =
@@ -235,6 +255,7 @@ view model =
               div [class "control"]
                   [
                     button [onClick Step] [ text ">"]
+                  , button [onClick ToggleRunning] [ text running_text ]
                   ]
             , div [class "tape"]
                  [
@@ -257,4 +278,4 @@ view model =
 
 subscriptions: Model -> Sub Message
 subscriptions model =
-    Sub.none
+    every (500 * millisecond) Tick
