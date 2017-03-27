@@ -4,10 +4,11 @@ import Html exposing (program, div, span, button, text)
 import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
 import Time exposing (every, millisecond)
+import Json.Decode exposing (Decoder, decodeString, string, int, bool)
+import Json.Decode.Pipeline exposing (decode, required)
 
-import TM.TuringMachine exposing (TuringMachine, step)
+import TM.TuringMachine exposing (TuringMachine, step, turingMachine)
 import TM.Move exposing (Move(..))
-
 
 main: Program Never Model Message
 main =
@@ -19,34 +20,63 @@ main =
     , subscriptions = subscriptions
     }
 
+json: String
+json =
+    """
+{
+    "tm": {
+        "tape": {
+            "left": [],
+            "current": "I",
+            "right": ["I", "I", "I", "I"]
+        },
+        "state": 0,
+        "transitions": [
+            { "current": [0, "I"], "next": [0, "I", "R"] },
+            { "current": [0, "_"], "next": [1, "I", "L"] },
+            { "current": [1, "I"], "next": [1, "I", "L"] },
+            { "current": [1, "_"], "next": [2, "_", "R"] }
+        ]
+    },
+    "blank": "_",
+    "visible_tape": 5,
+    "running": false
+}
+"""
+
 
 init: (Model, Cmd Message)
 init =
-    (
-     {
-       tm =
-           {
-             tape =
-                 {
-                   left = []
-                 , current = "I"
-                 , right = ["I", "I", "I"]
-                 }
-           , state = 0
-           , transitions =
-               [
-                 { current = (0, "I"), next = (0, "I", Right) }
-               , { current = (0, "_"), next = (1, "I", Left) }
-               , { current = (1, "I"), next = (1, "I", Left) }
-               , { current = (1, "_"), next = (2, "_", Right) }
-               ]
-           }
-     , blank = "_"
-     , visible_tape = 5
-     , running = False
-     }
-    , Cmd.none
-    )
+    let
+        m =
+            case decodeString model json of
+                Ok m -> m
+
+                Err msg ->
+                    {
+                        tm =
+                            {
+                              tape =
+                                  {
+                                    left = []
+                                  , current = msg
+                                  , right = ["I"]
+                                  }
+                            , state = 0
+                            , transitions =
+                                  [
+                                    { current = (0, "I"), next = (0, "I", Right) }
+                                  , { current = (0, "_"), next = (1, "I", Left) }
+                                  , { current = (1, "I"), next = (1, "I", Left) }
+                                  , { current = (1, "_"), next = (2, "_", Right) }
+                                  ]
+                            }
+                    , blank = "_"
+                    , visible_tape = 5
+                    , running = False
+                    }
+    in
+        (m, Cmd.none)
 
 
 -- Model
@@ -59,6 +89,15 @@ type alias Model =
     , visible_tape: Int
     , running: Bool
     }
+
+model: Decoder Model
+model =
+    decode Model
+        |> required "tm" turingMachine
+        |> required "blank" string
+        |> required "visible_tape" int
+        |> required "running" bool
+
 
 -- Update
 
