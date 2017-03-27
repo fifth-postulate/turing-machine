@@ -20,41 +20,10 @@ main =
     , subscriptions = subscriptions
     }
 
-json: String
-json =
-    """
-{
-    "tm": {
-        "tape": {
-            "left": [],
-            "current": "I",
-            "right": ["I", "I", "I", "I"]
-        },
-        "state": 0,
-        "transitions": [
-            { "current": [0, "I"], "next": [0, "I", "R"] },
-            { "current": [0, "_"], "next": [1, "I", "L"] },
-            { "current": [1, "I"], "next": [1, "I", "L"] },
-            { "current": [1, "_"], "next": [2, "_", "R"] }
-        ]
-    },
-    "blank": "_",
-    "visible_tape": 5,
-    "running": false
-}
-"""
-
 
 init: (Model, Cmd Message)
 init =
-    let
-        m =
-            case decodeString model json of
-                Ok m -> m
-
-                Err msg -> nullModel
-    in
-        (m, Cmd.none)
+    (nullModel, Cmd.none)
 
 
 -- Model
