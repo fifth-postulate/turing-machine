@@ -59,17 +59,11 @@ init =
                               tape =
                                   {
                                     left = []
-                                  , current = msg
-                                  , right = ["I"]
+                                  , current = "_"
+                                  , right = []
                                   }
                             , state = 0
-                            , transitions =
-                                  [
-                                    { current = (0, "I"), next = (0, "I", Right) }
-                                  , { current = (0, "_"), next = (1, "I", Left) }
-                                  , { current = (1, "I"), next = (1, "I", Left) }
-                                  , { current = (1, "_"), next = (2, "_", Right) }
-                                  ]
+                            , transitions = []
                             }
                     , blank = "_"
                     , visible_tape = 5
