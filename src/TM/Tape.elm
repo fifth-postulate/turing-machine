@@ -1,6 +1,9 @@
-module TM.Tape exposing (Tape, shift)
+module TM.Tape exposing (Tape, shift, tape)
 
 import List exposing (head, tail)
+import Json.Decode exposing (Decoder, list, string)
+import Json.Decode.Pipeline exposing (decode, required)
+
 import TM.Move exposing (Move(..))
 
 type alias Tape symbols =
@@ -9,6 +12,14 @@ type alias Tape symbols =
     , current: symbols
     , right: List symbols
     }
+
+
+tape: Decoder (Tape String)
+tape =
+    decode Tape
+        |> required "left" (list string)
+        |> required "current" string
+        |> required "right" (list string)
 
 
 shift: Tape symbols -> symbols -> Move -> Tape symbols

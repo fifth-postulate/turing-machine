@@ -1,12 +1,15 @@
-module TM.TuringMachine exposing (TuringMachine, step, view)
+module TM.TuringMachine exposing (TuringMachine, step, view, turingMachine)
 
 import Html exposing (program, div, span, button, text)
 import Html.Attributes exposing (class)
 import List exposing (map)
+import Json.Decode exposing (Decoder, int)
+import Json.Decode.Pipeline exposing (decode, required)
+
 import Helper exposing (take_with_default)
 
-import TM.Tape exposing (Tape, shift)
-import TM.Transitions exposing (Transitions, lookup)
+import TM.Tape exposing (Tape, shift, tape)
+import TM.Transitions exposing (Transitions, lookup, transitions)
 
 type alias TuringMachine states symbols =
     {
@@ -14,6 +17,14 @@ type alias TuringMachine states symbols =
     , state: states
     , transitions: Transitions states symbols
     }
+
+
+turingMachine: Decoder (TuringMachine Int String)
+turingMachine =
+    decode TuringMachine
+        |> required "tape" tape
+        |> required "state" int
+        |> required "transitions" transitions
 
 
 step: TuringMachine states symbols -> symbols -> TuringMachine states symbols
