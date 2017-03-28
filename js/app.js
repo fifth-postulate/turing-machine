@@ -1,11 +1,14 @@
 (function(){
+    var node = document.getElementById('target');
+    var app = Elm.TM.embed(node);
+
     tm = {
         'successor': {
             "tm": {
                 "tape": {
                     "left": [],
                     "current": "I",
-                    "right": ["I", "I", "I", "I"]
+                    "right": ["I", "I", "I"]
                 },
                 "state": 0,
                 "transitions": [
@@ -24,7 +27,7 @@
                 "tape": {
                     "left": [],
                     "current": "I",
-                    "right": ["I", "I", "I", "I"]
+                    "right": ["I", "I"]
                 },
                 "state": 0,
                 "transitions": [
@@ -40,16 +43,19 @@
         }
 
     };
-    var tm_key = 'successor';
+    window.tm_key = 'successor';
 
     var tm_selector = document.getElementById('turing-machine-key');
     for (var key in tm) {
         var option = document.createElement('option');
         option.textContent = key;
+        option.setAttribute('value', key);
         tm_selector.appendChild(option);
     }
+    tm_selector.onchange = function(event){
+        tm_key = event.target.value;
+        app.ports.restart.send(JSON.stringify(tm[tm_key]));
+    };
 
-    var node = document.getElementById('target');
-    var app = Elm.TM.embed(node);
     app.ports.restart.send(JSON.stringify(tm[tm_key]));
 })();
