@@ -42,6 +42,13 @@
     };
     var tm_key = 'successor';
 
+    var tm_selector = document.getElementById('turing-machine-key');
+    for (var key in tm) {
+        var option = document.createElement('option');
+        option.textContent = key;
+        tm_selector.appendChild(option);
+    }
+
     var node = document.getElementById('target');
     var app = Elm.TM.embed(node);
     app.ports.restart.send(JSON.stringify(tm[tm_key]));
