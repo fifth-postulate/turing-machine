@@ -64,6 +64,33 @@
             "blank": "_",
             "visible_tape": 5,
             "running": false
+        },
+        'copy': {
+            "tm": {
+                "tape": {
+                    "left": [],
+                    "current": "I",
+                    "right": ["I", "I"]
+                },
+                "state": 0,
+                "transitions": [
+                    { "current": [0, "I"], "next": [1, "C", "R"] },
+                    { "current": [0, "_"], "next": [5, "_", "L"] },
+                    { "current": [1, "I"], "next": [1, "I", "R"] },
+                    { "current": [1, "_"], "next": [2, "_", "R"] },
+                    { "current": [2, "I"], "next": [2, "I", "R"] },
+                    { "current": [2, "_"], "next": [3, "I", "L"] },
+                    { "current": [3, "I"], "next": [3, "I", "L"] },
+                    { "current": [3, "_"], "next": [4, "_", "L"] },
+                    { "current": [4, "I"], "next": [4, "I", "L"] },
+                    { "current": [4, "C"], "next": [0, "C", "R"] },
+                    { "current": [5, "C"], "next": [5, "I", "L"] },
+                    { "current": [5, "_"], "next": [6, "_", "R"] },
+                ]
+            },
+            "blank": "_",
+            "visible_tape": 5,
+            "running": false
         }
     };
     window.tm_key = 'successor';
