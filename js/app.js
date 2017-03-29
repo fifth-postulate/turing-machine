@@ -91,7 +91,28 @@
             "blank": "_",
             "visible_tape": 5,
             "running": false
+        },
+        'delete': {
+            "tm": {
+                "tape": {
+                    "left": [],
+                    "current": "M",
+                    "right": ["I", "I", "_", "I"]
+                },
+                "state": 0,
+                "transitions": [
+                    { "current": [0, "M"], "next": [1, "M", "R"] },
+                    { "current": [1, "I"], "next": [1, "_", "R"] },
+                    { "current": [1, "_"], "next": [2, "_", "L"] },
+                    { "current": [2, "_"], "next": [2, "_", "L"] },
+                    { "current": [2, "M"], "next": [3, "M", "R"] },
+                ]
+            },
+            "blank": "_",
+            "visible_tape": 5,
+            "running": false
         }
+
     };
     window.tm_key = 'successor';
 
