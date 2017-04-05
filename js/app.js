@@ -245,6 +245,31 @@
             "blank": "_",
             "visible_tape": 5,
             "running": false
+        },
+        'BB(5)?': {
+            "tm": {
+                "tape": {
+                    "left": [],
+                    "current": "_",
+                    "right": []
+                },
+                "state": 0,
+                "transitions": [
+                    { "current": [0, "_"], "next": [1, "I", "L"] },
+                    { "current": [0, "I"], "next": [2, "I", "R"] },
+                    { "current": [1, "_"], "next": [2, "I", "L"] },
+                    { "current": [1, "I"], "next": [1, "I", "L"] },
+                    { "current": [2, "_"], "next": [3, "I", "L"] },
+                    { "current": [2, "I"], "next": [4, "_", "R"] },
+                    { "current": [3, "_"], "next": [0, "I", "R"] },
+                    { "current": [3, "I"], "next": [3, "I", "R"] },
+                    { "current": [4, "_"], "next": [-1, "I", "L"] },
+                    { "current": [4, "I"], "next": [0, "_", "R"] },
+                ]
+            },
+            "blank": "_",
+            "visible_tape": 5,
+            "running": false
         }
     };
     window.tm_key = 'successor';
