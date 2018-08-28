@@ -7,8 +7,29 @@
     </head>
     <body>
         <h1>A Turing Machine</h1>
-        <select id="turing-machine-key"></select>
         <div id="target"></div>
+        <div class="dock">
+            <button id="load-program" class="load">Load</button>
+            <textarea id="program">{
+  "tm": {
+    "tape": {
+      "left": [],
+      "current": "I",
+      "right": ["I", "I", "I"]
+    },
+    "state": 0,
+    "transitions": [
+      { "current": [0, "I"], "next": [0, "I", "R"] },
+      { "current": [0, "_"], "next": [1, "I", "L"] },
+      { "current": [1, "I"], "next": [1, "I", "L"] },
+      { "current": [1, "_"], "next": [2, "_", "R"] }
+    ]
+  },
+  "blank": "_",
+  "visible_tape": 5,
+  "running": false
+}</textarea>
+        </div>
         <script src="lib/TM.js"></script>
         <script src="js/app.js"></script>
     </body>
