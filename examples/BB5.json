@@ -16,7 +16,7 @@
             { "current": [3, "_"], "next": [0, "I", "R"] },
             { "current": [3, "I"], "next": [3, "I", "R"] },
             { "current": [4, "_"], "next": [-1, "I", "L"] },
-            { "current": [4, "I"], "next": [0, "_", "R"] },
+            { "current": [4, "I"], "next": [0, "_", "R"] }
         ]
     },
     "blank": "_",
