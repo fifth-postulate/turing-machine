@@ -15,3 +15,4 @@ $(LIB_DIR)/$(NAME).js: src/TM.elm
 
 clean:
 	rm build.zip
+	rm $(LIB_DIR)/*
