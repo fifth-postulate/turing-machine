@@ -1,0 +1,24 @@
+{
+    "tm": {
+        "tape": {
+            "left": [],
+            "current": "I",
+            "right": ["_", "I", "I"]
+        },
+        "state": 0,
+        "transitions": [
+            { "current": [0, "I"], "next": [0, "I", "R"] },
+            { "current": [0, "_"], "next": [1, "_", "R"] },
+            { "current": [1, "I"], "next": [1, "I", "R"] },
+            { "current": [1, "_"], "next": [2, "_", "L"] },
+            { "current": [2, "I"], "next": [3, "_", "L"] },
+            { "current": [3, "I"], "next": [3, "I", "L"] },
+            { "current": [3, "_"], "next": [4, "I", "L"] },
+            { "current": [4, "I"], "next": [4, "I", "L"] },
+            { "current": [4, "_"], "next": [5, "_", "R"] },
+        ]
+    },
+    "blank": "_",
+    "visible_tape": 5,
+    "running": false
+}
