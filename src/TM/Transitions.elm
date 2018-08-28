@@ -1,10 +1,9 @@
-module TM.Transitions exposing (Transitions, Transition, lookup, transitions)
+module TM.Transitions exposing (Transition, Transitions, lookup, transitions)
 
+import Helper exposing (triple, tuple)
+import Json.Decode exposing (Decoder, int, list, string, succeed)
+import Json.Decode.Pipeline exposing (required)
 import List exposing (head, tail)
-import Json.Decode exposing (Decoder, list, int, string)
-import Json.Decode.Pipeline exposing (decode, required)
-import Helper exposing (tuple, triple)
-
 import TM.Move exposing (Move, move)
 
 
@@ -17,28 +16,31 @@ transitions =
 
 
 type alias Transition states symbols =
-    {
-      current: (states, symbols)
-    , next: (states, symbols, Move)
+    { current : ( states, symbols )
+    , next : ( states, symbols, Move )
     }
 
 
 transition =
-    decode Transition
+    succeed Transition
         |> required "current" (tuple int string)
         |> required "next" (triple int string move)
 
 
-lookup: Transitions states symbols -> (states, symbols) -> Maybe (states, symbols, Move)
-lookup transitions current =
-    case head transitions of
-        Just transition ->
-            if transition.current == current then
-                Just transition.next
+lookup : Transitions states symbols -> ( states, symbols ) -> Maybe ( states, symbols, Move )
+lookup ts current =
+    case head ts of
+        Just t ->
+            if t.current == current then
+                Just t.next
+
             else
-                case tail transitions of
-                    Just ts -> lookup ts current
+                case tail ts of
+                    Just tail ->
+                        lookup tail current
 
-                    Nothing -> Nothing
+                    Nothing ->
+                        Nothing
 
-        Nothing -> Nothing
+        Nothing ->
+            Nothing

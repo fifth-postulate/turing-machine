@@ -1,50 +1,51 @@
 module TM.Tape exposing (Tape, shift, tape)
 
+import Json.Decode exposing (Decoder, list, string, succeed)
+import Json.Decode.Pipeline exposing (required)
 import List exposing (head, tail)
-import Json.Decode exposing (Decoder, list, string)
-import Json.Decode.Pipeline exposing (decode, required)
-
 import TM.Move exposing (Move(..))
 
+
 type alias Tape symbols =
-    {
-      left: List symbols
-    , current: symbols
-    , right: List symbols
+    { left : List symbols
+    , current : symbols
+    , right : List symbols
     }
 
 
-tape: Decoder (Tape String)
+tape : Decoder (Tape String)
 tape =
-    decode Tape
+    succeed Tape
         |> required "left" (list string)
         |> required "current" string
         |> required "right" (list string)
 
 
-shift: Tape symbols -> symbols -> Move -> Tape symbols
-shift tape blank move =
+shift : Tape symbols -> symbols -> Move -> Tape symbols
+shift aTape blank move =
     case move of
         Left ->
             let
                 left =
-                    case tail tape.left of
-                        Just ts -> ts
+                    case tail aTape.left of
+                        Just ts ->
+                            ts
 
-                        Nothing -> []
+                        Nothing ->
+                            []
 
                 current =
-                    case head tape.left of
-                        Just t -> t
+                    case head aTape.left of
+                        Just t ->
+                            t
 
-                        Nothing -> blank
+                        Nothing ->
+                            blank
 
                 right =
-                    tape.current :: tape.right
-
+                    aTape.current :: aTape.right
             in
-            {
-              left = left
+            { left = left
             , current = current
             , right = right
             }
@@ -52,24 +53,25 @@ shift tape blank move =
         Right ->
             let
                 left =
-                    tape.current :: tape.left
+                    aTape.current :: aTape.left
 
                 current =
-                    case head tape.right of
-                        Just t -> t
+                    case head aTape.right of
+                        Just t ->
+                            t
 
-                        Nothing -> blank
+                        Nothing ->
+                            blank
 
                 right =
-                    case tail tape.right of
-                        Just ts -> ts
+                    case tail aTape.right of
+                        Just ts ->
+                            ts
 
-                        Nothing -> []
+                        Nothing ->
+                            []
             in
-            {
-              left = left
+            { left = left
             , current = current
             , right = right
             }
-
-
