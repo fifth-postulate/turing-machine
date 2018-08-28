@@ -1,11 +1,11 @@
 port module TM exposing (Message(..), Model, init, main, model, nullModel, restart, subscriptions, update, view)
 
 import Browser
-import Html exposing (button, div, span, text)
+import Html exposing (button, div, span)
 import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
-import Json.Decode exposing (Decoder, bool, decodeString, int, string, succeed)
-import Json.Decode.Pipeline exposing (required)
+import Json.Decode exposing (Decoder, bool, decodeString, errorToString, int, string, succeed)
+import Json.Decode.Pipeline exposing (hardcoded, required)
 import Platform.Sub exposing (batch)
 import TM.TuringMachine exposing (TuringMachine, step, turingMachine)
 import Time exposing (every)
@@ -35,6 +35,7 @@ type alias Model =
     , blank : String
     , visible_tape : Int
     , running : Bool
+    , message : Maybe String
     }
 
 
@@ -52,6 +53,7 @@ nullModel =
     , blank = "_"
     , visible_tape = 5
     , running = False
+    , message = Nothing
     }
 
 
@@ -62,6 +64,7 @@ model =
         |> required "blank" string
         |> required "visible_tape" int
         |> required "running" bool
+        |> hardcoded Nothing
 
 
 
@@ -74,6 +77,7 @@ type Message
     | ToggleRunning
     | Tick Time.Posix
     | Restart String
+    | RemoveMessage
 
 
 update : Message -> Model -> ( Model, Cmd Message )
@@ -104,9 +108,12 @@ update message aModel =
                             m
 
                         Err msg ->
-                            nullModel
+                            { aModel | message = Just (errorToString msg) }
             in
             ( next_m, Cmd.none )
+
+        RemoveMessage ->
+            ( { aModel | message = Nothing }, Cmd.none )
 
         DoNothing ->
             ( aModel, Cmd.none )
@@ -125,11 +132,15 @@ view aModel =
 
             else
                 ">>"
+
+        text =
+            Maybe.withDefault "" aModel.message
     in
     div [ class "container" ]
-        [ div [ class "control" ]
-            [ button [ onClick Step ] [ text ">" ]
-            , button [ onClick ToggleRunning ] [ text running_text ]
+        [ div [ class "message" ] [ Html.span [] [ Html.text text ] ]
+        , div [ class "control" ]
+            [ button [ onClick Step ] [ Html.text ">" ]
+            , button [ onClick ToggleRunning ] [ Html.text running_text ]
             ]
         , TM.TuringMachine.view aModel.tm aModel.visible_tape aModel.blank
         ]
