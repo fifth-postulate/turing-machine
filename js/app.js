@@ -1,6 +1,8 @@
 (function(){
     var node = document.getElementById('target');
-    var app = Elm.TM.embed(node);
+    var app = Elm.TM.init({
+        node: node
+    });
 
     tm = {
         'successor': {
