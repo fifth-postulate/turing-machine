@@ -4,7 +4,7 @@ import Helper exposing (take_with_default)
 import Html exposing (button, div, span, text)
 import Html.Attributes exposing (class)
 import Json.Decode exposing (Decoder, int, succeed)
-import Json.Decode.Pipeline exposing (required)
+import Json.Decode.Pipeline exposing (hardcoded, required)
 import List exposing (map)
 import TM.Tape exposing (Tape, shift, tape)
 import TM.Transitions exposing (Transitions, lookup, transitions)
@@ -14,6 +14,7 @@ type alias TuringMachine states symbols =
     { tape : Tape symbols
     , state : states
     , transitions : Transitions states symbols
+    , steps_taken : Int
     }
 
 
@@ -23,6 +24,7 @@ turingMachine =
         |> required "tape" tape
         |> required "state" int
         |> required "transitions" transitions
+        |> hardcoded 0
 
 
 step : TuringMachine states symbols -> symbols -> TuringMachine states symbols
@@ -43,7 +45,7 @@ step tm blank =
                 tape =
                     shift { current_tape | current = s } blank m
             in
-            { tm | state = q, tape = tape }
+            { tm | state = q, tape = tape, steps_taken = tm.steps_taken + 1 }
 
         Nothing ->
             tm
@@ -62,7 +64,9 @@ view tm visible_tape blank =
             map make_cell (take_with_default visible_tape blank tm.tape.right)
     in
     div [ class "turing-machine" ]
-        [ div [ class "tape" ]
+        [ div [ class "steps" ]
+            [ span [] [ text (String.fromInt tm.steps_taken) ] ]
+        , div [ class "tape" ]
             [ div [ class "left" ] left_tape
             , div [ class "current" ]
                 [ make_cell tm.tape.current
@@ -70,6 +74,6 @@ view tm visible_tape blank =
             , div [ class "right" ] right_tape
             ]
         , div [ class "state" ]
-            [ span [] [ text (String.fromInt tm.state) ]
+            [ span [ class "state" ] [ text (String.fromInt tm.state) ]
             ]
         ]

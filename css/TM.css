@@ -34,6 +34,18 @@ body {
     border-radius: 5px;
 }
 
+.turing-machine .steps {
+    display: flex;
+    justify-content: right;
+}
+
+.turing-machine .steps > span {
+    background: white;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    border-radius: 2px;
+}
+
 .turing-machine .tape {
     background: var(--tape-background);
     display: flex;

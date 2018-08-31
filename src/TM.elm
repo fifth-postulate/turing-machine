@@ -49,6 +49,7 @@ nullModel =
             }
         , state = 0
         , transitions = []
+        , steps_taken = 0
         }
     , blank = "_"
     , visible_tape = 5
