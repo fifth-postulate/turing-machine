@@ -2,7 +2,7 @@ name: Publish Workshop Material
 on:
   push:
     branches:
-      - main
+      - master
 jobs:
   create-archive:
     runs-on: ubuntu-latest
